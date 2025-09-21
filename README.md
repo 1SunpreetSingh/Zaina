@@ -1,1 +1,159 @@
-Click for the website bbg
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marry Me?</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: #ffe6f0; /* soft pink background */
+        overflow: hidden;
+        font-family: 'Arial', sans-serif;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 4em;
+        color: #ff3399;
+        text-align: center;
+        z-index: 10;
+        margin-bottom: 50px;
+    }
+
+    .button-container {
+        text-align: center;
+        z-index: 10;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    button {
+        font-size: 1.5em;
+        padding: 10px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        background-color: #ff66cc;
+        color: white;
+        transition: all 0.2s;
+        position: relative;
+        z-index: 10;
+    }
+
+    button#no {
+    position: fixed; /* instead of absolute */
+    z-index: 20;
+}
+
+
+    .heart, .flower {
+        position: absolute;
+        pointer-events: none;
+    }
+</style>
+</head>
+<body>
+
+<h1>WILL YOU MARRY ME?</h1>
+<div class="button-container">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+</div>
+
+<script>
+// Hearts falling from top
+function createHeart(x, y) {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '❤️';
+    heart.style.left = (x || Math.random() * window.innerWidth) + 'px';
+    heart.style.top = (y || -50) + 'px';
+    heart.style.fontSize = Math.random() * 30 + 20 + 'px';
+    document.body.appendChild(heart);
+
+    let speed = Math.random() * 3 + 2;
+    let rotate = Math.random() * 360;
+
+    const fall = setInterval(() => {
+        let top = parseFloat(heart.style.top);
+        if(top > window.innerHeight) {
+            heart.remove();
+            clearInterval(fall);
+        } else {
+            heart.style.top = top + speed + 'px';
+            rotate += 5;
+            heart.style.transform = `rotate(${rotate}deg)`;
+        }
+    }, 20);
+}
+
+setInterval(() => createHeart(), 300);
+
+// Flowers on cursor
+document.addEventListener('mousemove', e => {
+    const flower = document.createElement('div');
+    flower.classList.add('flower');
+    flower.innerHTML = '🌸';
+    flower.style.left = e.clientX + 'px';
+    flower.style.top = e.clientY + 'px';
+    flower.style.fontSize = Math.random() * 20 + 10 + 'px';
+    document.body.appendChild(flower);
+
+    setTimeout(() => flower.remove(), 1000);
+});
+
+// No button behavior
+const noBtn = document.getElementById('no');
+const yesBtn = document.getElementById('yes');
+
+function moveNoButton(initial = false) {
+    let x, y;
+    if(initial) {
+        // Place No button near Yes button
+        const yesRect = yesBtn.getBoundingClientRect();
+        x = yesRect.right + 10;
+        y = yesRect.top;
+    } else {
+        // Random position when hovered
+        x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
+    }
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+}
+
+// Place No button near Yes when page loads
+window.onload = () => moveNoButton(true);
+
+// Make No button dodge on hover
+noBtn.addEventListener('mouseenter', () => moveNoButton(false));
+
+// Click anywhere to create pink hearts
+document.addEventListener('click', e => {
+    for(let i=0; i<5; i++) {
+        createHeart(e.clientX + Math.random()*50 - 25, e.clientY + Math.random()*50 - 25);
+    }
+});
+
+// Yes button click
+yesBtn.addEventListener('click', () => {
+    alert("She said YES! ❤️");
+});
+window.onload = () => {
+    // Start No button slightly to the right of center
+    const yesRect = yesBtn.getBoundingClientRect();
+    noBtn.style.left = (yesRect.right + 10) + 'px';
+    noBtn.style.top = yesRect.top + 'px';
+};
+</script>
+</body>
+</html>Click for the website bbg
